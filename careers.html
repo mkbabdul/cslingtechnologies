@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Careers | C-sling Technologies</title>
+    <!-- EmailJS SDK for sending emails -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/index.min.js"></script>
+    <script>
+      // Optional: Initialize EmailJS if you want to use it later
+      // emailjs.init("YOUR_PUBLIC_KEY");
+    </script>
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; }
+:root{
+  --accent:#00d4ff;
+  --muted:#bfcbdc;
+  --card-bg: rgba(10,14,30,0.65);
+}
+/* NAV */
+nav{ position:fixed; top:0; left:0; right:0; z-index:1200; padding:18px 5%; display:flex; justify-content:space-between; align-items:center; background:linear-gradient(180deg, rgba(6,10,20,0.45), rgba(6,10,20,0.15)); backdrop-filter: blur(8px); border-bottom:1px solid rgba(0,212,255,0.06); }
+nav .logo{ color:var(--accent); font-weight:800; font-size:1.15rem; letter-spacing:0.6px; }
+nav ul{ display:flex; gap:20px; list-style:none; }
+nav a{ color:#fff; text-decoration:none; font-weight:600; opacity:0.95; }
+nav a:hover{ color:var(--accent); transform:translateY(-2px); }
+
+/* HERO - use local image if present (careers-bg.jpg or hiring.jpg) with gradient fallback */
+body{ background-color:#071029; background-image: linear-gradient(180deg, rgba(3,7,18,0.6), rgba(7,12,25,0.6)), url('hiring.jpg'); background-size:cover; background-position:center; }
+.hero{ min-height:56vh; display:flex; align-items:center; justify-content:center; padding-top:80px; position:relative; overflow:hidden; }
+.hero::after{ content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.6)); }
+.hero .hero-inner{ position:relative; z-index:2; text-align:center; color:#fff; max-width:1100px; padding:4rem 2rem; }
+.hero h1{ font-size:3rem; line-height:1.02; background:linear-gradient(90deg,var(--accent),#0077ff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.hero p{ color:var(--muted); margin-top:10px; font-size:1.05rem; }
+.hero .subtitle{ margin-top:1rem; color:#9fb5cc; }
+
+/* Cinematic subtle particles (CSS only) */
+.hero .glow{ position:absolute; width:30rem; height:30rem; filter:blur(80px); opacity:0.2; background:radial-gradient(circle at 20% 20%, rgba(0,212,255,0.35), transparent 30%); transform:translate(-10%, -20%); z-index:1; }
+
+.container{ padding:5rem 6%; }
+
+.careers h2{ text-align:center; color:var(--accent); font-size:2.2rem; margin-bottom:2.5rem; }
+
+.jobs{ display:grid; grid-template-columns: repeat(auto-fit,minmax(300px,1fr)); gap:2rem; }
+
+/* Job card - richer and interactive */
+.job-card{ perspective:1400px; }
+.card-inner{ position:relative; width:100%; min-height:360px; transform-style:preserve-3d; transition:transform 0.7s cubic-bezier(.2,.9,.2,1); }
+.job-card.active .card-inner{ transform:rotateY(180deg); }
+.card-face{ position:absolute; inset:0; border-radius:16px; padding:1.6rem; backface-visibility:hidden; display:flex; flex-direction:column; justify-content:space-between; box-shadow: 0 10px 40px rgba(2,6,20,0.6); }
+.card-front{ background: linear-gradient(135deg, rgba(2,8,20,0.7), rgba(8,16,28,0.6)); border:1px solid rgba(0,212,255,0.07); }
+.card-back{ background: linear-gradient(135deg, rgba(0,20,40,0.85), rgba(0,40,80,0.9)); color:#eaf6ff; transform:rotateY(180deg); border:1px solid rgba(0,212,255,0.12); }
+
+.role-meta{ display:flex; gap:12px; flex-wrap:wrap; margin-top:12px; }
+.meta-pill{ background:rgba(0,0,0,0.3); color:var(--muted); padding:6px 10px; border-radius:999px; font-size:0.85rem; border:1px solid rgba(255,255,255,0.03); }
+
+.card-front h3{ color:var(--accent); font-size:1.25rem; }
+.card-front p { color:#cbd9ea; margin-top:8px; }
+
+.details-list{ list-style:none; color:#dbebf8; line-height:1.6; margin:1rem 0; padding-left:0; }
+.details-list li{ margin:6px 0; }
+
+.btn{ padding:10px 18px; border-radius:999px; font-weight:700; cursor:pointer; border:none; transition: all 0.3s ease; }
+.btn-apply{ background:linear-gradient(135deg, var(--accent), #0099ff); color:#000; }
+.btn-apply:hover{ transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,212,255,0.3); }
+.btn-more{ background:transparent; color:var(--accent); border:1px solid rgba(0,212,255,0.3); }
+.btn-more:hover{ background:rgba(0,212,255,0.1); border-color:rgba(0,212,255,0.6); transform: translateY(-2px); }
+
+/* Accessible modal */
+.modal{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:1500; }
+.modal.active{ display:flex; }
+.modal-backdrop{ position:absolute; inset:0; background:linear-gradient(180deg, rgba(2,6,20,0.6), rgba(2,6,20,0.85)); backdrop-filter: blur(4px); }
+.modal-panel{ position:relative; z-index:2; width:min(720px,95%); background:var(--card-bg); border-radius:12px; padding:2rem; border:1px solid rgba(0,212,255,0.06); box-shadow: 0 20px 60px rgba(0,212,255,0.1); }
+.modal-panel h3{ font-size:1.4rem; margin-bottom:1.5rem; }
+.form-row{ display:flex; gap:12px; margin-bottom:12px; }
+.form-row .field{ flex:1; }
+.form-field{ margin-bottom:12px; }
+.form-field label{ display:block; color:var(--muted); font-size:0.9rem; margin-bottom:6px; font-weight:600; }
+.form-field input, .form-field textarea, .form-field select{ width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(0,212,255,0.12); background:rgba(255,255,255,0.02); color:#e6f3ff; transition: all 0.3s ease; font-size:0.95rem; }
+.form-field input:focus, .form-field textarea:focus, .form-field select:focus{ outline:none; border-color:rgba(0,212,255,0.4); background:rgba(0,212,255,0.05); box-shadow: 0 0 12px rgba(0,212,255,0.1); }
+.form-actions{ display:flex; gap:10px; justify-content:flex-end; margin-top:18px; }
+
+/* File upload - cinematic styling */
+.file-upload-group{ margin:16px 0; padding:12px; background:rgba(0,212,255,0.03); border:1px solid rgba(0,212,255,0.08); border-radius:8px; }
+.file-upload-group > label{ display:block; color:var(--muted); font-size:0.9rem; margin-bottom:10px; font-weight:600; }
+.file-input-wrapper{ position:relative; display:inline-block; }
+.file-input-label-btn{ padding:10px 18px; background:linear-gradient(135deg, rgba(0,212,255,0.2), rgba(0,153,255,0.1)); color:var(--accent); border:1px solid rgba(0,212,255,0.3); border-radius:8px; cursor:pointer; font-size:0.9rem; font-weight:600; transition: all 0.3s ease; }
+.file-input-label-btn:hover{ background:linear-gradient(135deg, rgba(0,212,255,0.3), rgba(0,153,255,0.2)); border-color:rgba(0,212,255,0.5); box-shadow: 0 6px 20px rgba(0,212,255,0.15); }
+#fileInput{ display:none; }
+.file-list{ margin-top:10px; list-style:none; }
+.file-list li{ color:#cbd9ea; font-size:0.85rem; margin:6px 0; padding:8px 10px; background:rgba(0,212,255,0.06); border-radius:6px; display:flex; justify-content:space-between; align-items:center; border-left:2px solid rgba(0,212,255,0.2); }
+.file-list button{ background:none; border:none; color:#ff6b6b; cursor:pointer; font-size:0.8rem; font-weight:600; transition: all 0.2s; }
+.file-list button:hover{ color:#ff5252; }
+
+/* Success Modal */
+.success-modal{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:1600; }
+.success-modal.active{ display:flex; }
+.success-backdrop{ position:absolute; inset:0; background:linear-gradient(180deg, rgba(2,6,20,0.6), rgba(2,6,20,0.85)); backdrop-filter: blur(4px); }
+.success-panel{ position:relative; z-index:2; width:min(500px,95%); background:var(--card-bg); border-radius:12px; padding:2rem; border:1px solid rgba(0,212,255,0.06); text-align:center; box-shadow: 0 20px 60px rgba(0,212,255,0.15); }
+.success-icon{ font-size:3rem; margin-bottom:1rem; animation: bounce 0.6s ease-out; }
+@keyframes bounce { 0%{ transform: scale(0); } 50%{ transform: scale(1.1); } 100%{ transform: scale(1); } }
+.success-panel h3{ color:var(--accent); margin-bottom:0.5rem; font-size:1.3rem; }
+.success-panel p{ color:var(--muted); line-height:1.6; }
+.success-panel .btn{ margin-top:1.5rem; }
+
+footer{ text-align:center; padding:28px 6%; color:#98a9bd; border-top:1px solid rgba(255,255,255,0.03); background: linear-gradient(180deg, rgba(7,12,25,0.4), rgba(5,8,18,0.8)); }
+
+@media (max-width:760px){ .hero h1{ font-size:1.9rem; } .card-inner{ min-height:300px; } .form-row{ flex-direction:column; } }
+</style>
+</head>
+
+<body>
+
+<nav>
+  <div class="logo">C-Sling</div>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="upcoming.html">Upcoming</a></li>
+    <li><a href="careers.html">Careers</a></li>
+    <li><a href="aboutus.html">About Us</a></li>
+  </ul>
+</nav>
+
+<section class="hero" role="img" aria-label="Hiring banner">
+  <div class="glow"></div>
+  <div class="hero-inner">
+    <h1>We're hiring — join our cinematic future</h1>
+    <p class="subtitle">Work on meaningful products, collaborate across teams, and help shape technology that impacts millions.</p>
+  </div>
+</section>
+
+<main class="container">
+  <section class="careers">
+    <h2>Open Positions</h2>
+
+    <div class="jobs" aria-live="polite">
+
+      <!-- INTERN / TRAINEE -->
+      <article class="job-card" tabindex="0" aria-labelledby="job-intern">
+        <div class="card-inner">
+          <div class="card-face card-front">
+            <div>
+              <h3 id="job-intern">Intern / Trainee</h3>
+              <p>Entry-level role delivering hands-on exposure to systems, cloud basics, and deployments.</p>
+              <div class="role-meta">
+                <span class="meta-pill">Location: Remote / On-site</span>
+                <span class="meta-pill">Type: Internship (6 months)</span>
+                <span class="meta-pill">Degree: Currently enrolled / Bachelor preferred</span>
+              </div>
+            </div>
+            <div class="cta-row">
+              <button class="btn btn-more" onclick="toggleFlip(this)">Details</button>
+              <button class="btn btn-apply" data-role="Intern / Trainee" onclick="openApplyModal(event)">Apply</button>
+            </div>
+          </div>
+
+          <div class="card-face card-back">
+            <div>
+              <h4>Role Details</h4>
+              <ul class="details-list">
+                <li><strong>Minimum:</strong> Enrolled in Bachelor's program (CS, IT, Engineering)</li>
+                <li><strong>Experience:</strong> 0-1 years; passion & projects preferred</li>
+                <li><strong>Responsibilities:</strong> shadow engineers, contribute to tasks, test deployments</li>
+              </ul>
+            </div>
+            <div class="cta-row">
+              <button class="btn btn-more" onclick="toggleFlip(this)">Back</button>
+              <button class="btn btn-apply" data-role="Intern / Trainee" onclick="openApplyModal(event)">Apply</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- MARKETING OFFICER -->
+      <article class="job-card" tabindex="0" aria-labelledby="job-marketing">
+        <div class="card-inner">
+          <div class="card-face card-front">
+            <div>
+              <h3 id="job-marketing">Marketing Officer</h3>
+              <p>Drive brand growth, digital marketing campaigns and customer acquisition.</p>
+              <div class="role-meta">
+                <span class="meta-pill">Location: Hybrid</span>
+                <span class="meta-pill">Experience: 3+ years</span>
+                <span class="meta-pill">Degree: Bachelor's in Marketing or related</span>
+              </div>
+            </div>
+            <div class="cta-row">
+              <button class="btn btn-more" onclick="toggleFlip(this)">Details</button>
+              <button class="btn btn-apply" data-role="Marketing Officer" onclick="openApplyModal(event)">Apply</button>
+            </div>
+          </div>
+
+          <div class="card-face card-back">
+            <div>
+              <h4>Role Details</h4>
+              <ul class="details-list">
+                <li><strong>Minimum:</strong> Bachelor's in Marketing / Communications</li>
+                <li><strong>Experience:</strong> 3+ years building digital campaigns</li>
+                <li><strong>Skills:</strong> Analytics, paid media, content strategy</li>
+                <li><strong>Perks:</strong> flexible hours, learning stipend, equity options</li>
+              </ul>
+            </div>
+            <div class="cta-row">
+              <button class="btn btn-more" onclick="toggleFlip(this)">Back</button>
+              <button class="btn btn-apply" data-role="Marketing Officer" onclick="openApplyModal(event)">Apply</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- CLOUD ENGINEER -->
+      <article class="job-card" tabindex="0" aria-labelledby="job-cloud">
+        <div class="card-inner">
+          <div class="card-face card-front">
+            <div>
+              <h3 id="job-cloud">Cloud Engineer</h3>
+              <p>Design, deploy and manage scalable, secure cloud infrastructure and automation.</p>
+              <div class="role-meta">
+                <span class="meta-pill">Location: Remote</span>
+                <span class="meta-pill">Experience: 4+ years</span>
+                <span class="meta-pill">Degree: Bachelor's in CS / Engineering</span>
+              </div>
+            </div>
+            <div class="cta-row">
+              <button class="btn btn-more" onclick="toggleFlip(this)">Details</button>
+              <button class="btn btn-apply" data-role="Cloud Engineer" onclick="openApplyModal(event)">Apply</button>
+            </div>
+          </div>
+
+          <div class="card-face card-back">
+            <div>
+              <h4>Role Details</h4>
+              <ul class="details-list">
+                <li><strong>Minimum:</strong> Bachelor's degree in Computer Science or similar</li>
+                <li><strong>Experience:</strong> 4+ years with public cloud (AWS/GCP/Azure)</li>
+                <li><strong>Skills:</strong> IaC (Terraform), CI/CD, Kubernetes, security best practices</li>
+                <li><strong>Responsibilities:</strong> architecture reviews, cost optimisation, runbooks</li>
+              </ul>
+            </div>
+            <div class="cta-row">
+              <button class="btn btn-more" onclick="toggleFlip(this)">Back</button>
+              <button class="btn btn-apply" data-role="Cloud Engineer" onclick="openApplyModal(event)">Apply</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+</main>
+
+<!-- Apply Modal -->
+<div id="applyModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="applyTitle">
+  <div class="modal-backdrop" onclick="closeModal()"></div>
+  <div class="modal-panel" role="document">
+    <h3 id="applyTitle" style="color:var(--accent)">Apply for role</h3>
+    <form id="applyForm">
+      <div class="form-row">
+        <div class="form-field field">
+          <label for="appName">Full name</label>
+          <input id="appName" name="name" required>
+        </div>
+        <div class="form-field field">
+          <label for="appEmail">Email</label>
+          <input id="appEmail" name="email" type="email" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field field">
+          <label for="appDegree">Highest degree</label>
+          <select id="appDegree" name="degree">
+            <option>Bachelor's</option>
+            <option>Master's</option>
+            <option>PhD</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-field field">
+          <label for="appYears">Years of experience</label>
+          <input id="appYears" name="years" type="number" min="0" value="0" required>
+        </div>
+      </div>
+      <div class="form-field">
+        <label for="appMessage">Brief message / cover note</label>
+        <textarea id="appMessage" name="message" rows="4"></textarea>
+      </div>
+      
+      <!-- File Upload Section -->
+      <div class="file-upload-group">
+        <label style="display:block; color:var(--muted); font-size:0.9rem; margin-bottom:8px;">Attach CV, Resume or Cover Letter (optional)</label>
+        <div class="file-input-wrapper">
+          <label for="fileInput" class="file-input-label-btn">📎 Choose Files</label>
+          <input id="fileInput" type="file" multiple accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg">
+        </div>
+        <ul id="fileList" class="file-list"></ul>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-more" onclick="closeModal()">Cancel</button>
+        <button type="submit" class="btn btn-apply" id="submitBtn">Send Application</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Success Modal -->
+<div id="successModal" class="success-modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="success-backdrop" onclick="closeSuccessModal()"></div>
+  <div class="success-panel" role="document">
+    <div class="success-icon">✅</div>
+    <h3>Application Received!</h3>
+    <p>Your application has been successfully submitted to <strong>carlstechnologies@gmail.com</strong>.</p>
+    <p style="margin-top:12px; font-size:0.9rem;">We'll review your application and get back to you soon.</p>
+    <button class="btn btn-apply" onclick="closeSuccessModal()">Close</button>
+  </div>
+</div>
+
+<footer>
+  © 2026 C-sling Technologies. All rights reserved.
+</footer>
+
+<script>
+// Initialize EmailJS with your public key (free account)
+// Sign up at https://www.emailjs.com and get your public key
+emailjs.init("YOUR_PUBLIC_KEY_HERE"); // Replace with your EmailJS public key
+
+// Toggle flip
+function toggleFlip(el){
+  const card = el.closest('.job-card');
+  card.classList.toggle('active');
+}
+
+// Modal logic
+const modal = document.getElementById('applyModal');
+const successModal = document.getElementById('successModal');
+const form = document.getElementById('applyForm');
+const fileInput = document.getElementById('fileInput');
+const fileList = document.getElementById('fileList');
+let selectedRole = '';
+let selectedFiles = [];
+
+// File upload handler
+fileInput.addEventListener('change', (e) => {
+  selectedFiles = Array.from(e.target.files);
+  updateFileList();
+});
+
+function updateFileList() {
+  fileList.innerHTML = '';
+  selectedFiles.forEach((file, index) => {
+    const li = document.createElement('li');
+    li.innerHTML = `
+      <span>📄 ${file.name} (${(file.size / 1024).toFixed(1)}KB)</span>
+      <button type="button" onclick="removeFile(${index})">Remove</button>
+    `;
+    fileList.appendChild(li);
+  });
+}
+
+function removeFile(index) {
+  selectedFiles.splice(index, 1);
+  updateFileList();
+  fileInput.value = ''; // Reset input
+}
+
+function openApplyModal(e){
+  e.stopPropagation();
+  const btn = e.currentTarget;
+  selectedRole = btn.getAttribute('data-role') || '';
+  document.getElementById('applyTitle').innerText = 'Apply — ' + selectedRole;
+  modal.classList.add('active');
+  modal.setAttribute('aria-hidden','false');
+  document.getElementById('appName').focus();
+}
+
+function closeModal(){
+  modal.classList.remove('active');
+  modal.setAttribute('aria-hidden','true');
+  form.reset();
+  selectedFiles = [];
+  fileList.innerHTML = '';
+}
+
+function closeSuccessModal(){
+  successModal.classList.remove('active');
+  successModal.setAttribute('aria-hidden','true');
+}
+
+// Submit application with EmailJS
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const submitBtn = document.getElementById('submitBtn');
+  const originalText = submitBtn.innerText;
+  submitBtn.innerText = 'Opening email...';
+  submitBtn.disabled = true;
+
+  try {
+    const formData = new FormData(form);
+    const name = formData.get('name');
+    const email = formData.get('email');
+    const degree = formData.get('degree');
+    const years = formData.get('years');
+    const message = formData.get('message');
+
+    // Build file list text
+    let filesText = '';
+    if (selectedFiles.length > 0) {
+      filesText = '\n\n--- ATTACHMENTS (Please attach files manually) ---\n' + 
+                  selectedFiles.map(f => `• ${f.name} (${(f.size/1024).toFixed(1)}KB)`).join('\n');
+    }
+
+    // Prepare email content
+    const emailBody = `
+Dear Hiring Team,
+
+I am applying for the position of ${selectedRole}.
+
+--- APPLICANT INFORMATION ---
+Name: ${name}
+Email: ${email}
+Degree: ${degree}
+Years of Experience: ${years}
+
+--- MESSAGE ---
+${message}
+${filesText}
+
+---
+Sent from C-Sling Careers Portal
+`;
+
+    const subject = encodeURIComponent(`Job Application: ${selectedRole} — ${name}`);
+    const body = encodeURIComponent(emailBody);
+
+    // Open default email client with pre-filled content
+    window.location.href = `mailto:carlstechnologies@gmail.com?subject=${subject}&body=${body}`;
+
+    // Show success modal
+    setTimeout(() => {
+      closeModal();
+      successModal.classList.add('active');
+      successModal.setAttribute('aria-hidden','false');
+    }, 500);
+
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Error processing application. Please try again.');
+  } finally {
+    submitBtn.innerText = originalText;
+    submitBtn.disabled = false;
+  }
+});
+
+// Close modals on ESC
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    closeModal();
+    closeSuccessModal();
+  }
+});
+
+// Enhance accessibility
+document.querySelectorAll('.job-card').forEach(card => {
+  card.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') card.classList.toggle('active');
+  });
+});
+</script>
+
+</body>
+</html>

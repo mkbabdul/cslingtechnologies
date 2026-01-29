@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>C-SLING TECHNOLOGIES - Services</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif;}
+body{color:white;overflow-x:hidden;background:#000;}
+
+/* Header */
+header{
+  position:fixed; top:0; width:100%;
+  text-align:center; font-size:32px;
+  font-weight:bold; background:rgba(0,0,0,0.5);
+  padding:10px 0; z-index:1002;
+}
+
+/* Navigation */
+nav{
+  position:fixed; top:60px; right:30px; z-index:1002;
+}
+nav a{
+  color:white; text-decoration:none;
+  margin-left:25px; font-weight:bold; transition:0.3s;
+}
+nav a:hover{color:#00d4ff;}
+
+/* Grid */
+.services-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:20px;
+  padding:120px 30px 50px 30px;
+}
+
+/* Card styles */
+.service-card{
+  position:relative;
+  height:200px; cursor:pointer; overflow:hidden;
+  border-radius:15px; transition:transform 0.5s, box-shadow 0.5s;
+}
+.service-card:hover{
+  transform:scale(1.05); box-shadow:0 0 20px #00d4ff;
+}
+.service-card img{
+  position:absolute; width:100%; height:100%; object-fit:cover; opacity:0.3;
+}
+.service-card .content{
+  position:relative; z-index:1; text-align:center;
+}
+.service-card h3{margin-bottom:5px; font-size:20px;}
+.service-card p{font-size:14px;}
+
+/* Expanded cinematic overlay */
+.service-overlay{
+  display:none;
+  position:fixed; top:0; left:0; width:100%; height:100%;
+  z-index:1005; background-size:cover; background-position:center;
+  transition:opacity 0.5s, transform 0.5s; opacity:0; transform:scale(0.95);
+  overflow-y:auto;
+}
+.service-overlay.active{
+  display:block;
+  opacity:1; transform:scale(1);
+}
+.service-overlay .overlay-content{
+  background:rgba(0,0,0,0.7); padding:30px; margin:50px auto;
+  max-width:600px; border-radius:15px; text-align:left;
+  transition:transform 0.5s;
+}
+.service-overlay h2{margin-bottom:10px; font-size:28px;}
+.service-overlay p{margin-bottom:20px; font-size:16px; line-height:1.5;}
+.service-overlay .back-btn, .service-overlay .book-btn{
+  padding:10px 18px; margin:5px; border:none; border-radius:8px;
+  cursor:pointer; font-weight:bold; font-size:14px; transition:0.3s;
+}
+.service-overlay .back-btn{background:#00d4ff; color:black;}
+.service-overlay .book-btn{background:#00ff7f; color:black;}
+.service-overlay .back-btn:hover{background:#00a0cc;}
+.service-overlay .book-btn:hover{background:#00cc5a;}
+
+/* Form */
+.service-form{
+  background:rgba(255,255,255,0.9); padding:20px; border-radius:10px;
+  margin-top:20px; color:black;
+}
+.service-form input, .service-form textarea{
+  width:100%; margin:5px 0; padding:8px; border-radius:5px; border:1px solid #ccc;
+}
+.service-form input.invalid, .service-form textarea.invalid{
+  border:2px solid red;
+}
+.service-form button{
+  background:#00d4ff; color:black; padding:10px 15px; border:none; border-radius:5px; cursor:pointer; font-weight:bold;
+}
+.service-form button:hover{background:#00a0cc;}
+
+/* Thank you message */
+.thankyou-msg{
+  display:none; text-align:center; font-size:18px;
+  margin-top:15px; padding:10px; background:rgba(0,255,127,0.2);
+  border-radius:10px; color:#00ff7f; font-weight:bold; opacity:1; transition:opacity 1s;
+}
+
+/* Footer */
+footer{position:fixed; bottom:10px; width:100%; text-align:center; font-size:14px; opacity:0.7; color:white;}
+
+@media(max-width:768px){
+  .services-grid{grid-template-columns:1fr;}
+  .service-overlay .overlay-content{margin:30px 15px;}
+}
+</style>
+</head>
+<body>
+
+<header>C-SLING TECHNOLOGIES</header>
+<nav class="main-nav">
+    <a href="index.html">Home</a>
+    <a href="services.html">Services</a>
+    <a href="shop.html">Shop</a>
+    <a href="upcoming.html">Upcoming</a>
+    <a href="careers.html">Careers</a>
+    <a href="aboutus.html">About Us</a>
+</nav>
+
+
+<div class="services-grid">
+  <!-- Cards -->
+  <div class="service-card" onclick="openOverlay('networksolutions.jpg','Network Solutions','Network solutions and networking installations for clients like Century Hotels, Kamuli, Masese, Private Homes, Levrone Fitness Camp and more.')">
+    <img src="networksolutions.jpg" alt="">
+    <div class="content"><h3>Network Solutions</h3><p>Professional networking & cabling.</p></div>
+  </div>
+
+  <div class="service-card" onclick="openOverlay('web.jpg','Web Services','Custom websites, IT consultancy, and digital services for businesses.')">
+    <img src="web.jpg" alt="">
+    <div class="content"><h3>Web Services</h3><p>Modern digital solutions for growth.</p></div>
+  </div>
+
+  <div class="service-card" onclick="openOverlay('consultancy.jpg','IT Consultancy','Expert IT advice and consultancy for companies and startups.')">
+    <img src="consultancy.jpg" alt="">
+    <div class="content"><h3>IT Consultancy</h3><p>Professional consultancy services.</p></div>
+  </div>
+
+  <div class="service-card" onclick="openOverlay('system.jpg','System Installation','Installation of IT systems in private homes, offices, and fitness camps.')">
+    <img src="system.jpg" alt="">
+    <div class="content"><h3>System Installation</h3><p>Reliable system setup for clients.</p></div>
+  </div>
+
+  <div class="service-card" onclick="openOverlay('cctv.jpg','CCTV Installation','CCTV installation and monitoring solutions for homes and businesses.')">
+    <img src="cctv.jpg" alt="">
+    <div class="content"><h3>CCTV Installation</h3><p>Security solutions you can trust.</p></div>
+  </div>
+
+  <div class="service-card" onclick="openOverlay('it.jpg','IT Support','Ongoing IT support and maintenance for all clients.')">
+    <img src="it.jpg" alt="">
+    <div class="content"><h3>IT Support</h3><p>Professional troubleshooting and maintenance.</p></div>
+  </div>
+</div>
+
+<!-- Overlay -->
+<div class="service-overlay" id="overlay">
+  <div class="overlay-content">
+    <h2 id="overlayTitle">Service Title</h2>
+    <p id="overlayDesc">Service Description</p>
+    <button class="back-btn" onclick="closeOverlay()">Back</button>
+    <button class="book-btn" onclick="showForm()">Book Service</button>
+
+    <div class="service-form" id="serviceForm">
+      <input type="text" id="formName" placeholder="Your Name">
+      <input type="text" id="formCompany" placeholder="Company Name">
+      <input type="text" id="formMobile" placeholder="Mobile Number">
+      <input type="email" id="formEmail" placeholder="Email">
+      <textarea id="formDescription" placeholder="Describe your request"></textarea>
+      <button type="button" onclick="sendWhatsApp()">Send</button>
+      <div class="thankyou-msg" id="thankYouMsg">Details received, we will contact you soon!</div>
+    </div>
+  </div>
+</div>
+
+<footer>© 2026 C-Sling Technologies</footer>
+
+<script>
+const overlay = document.getElementById('overlay');
+const overlayTitle = document.getElementById('overlayTitle');
+const overlayDesc = document.getElementById('overlayDesc');
+const overlayForm = document.getElementById('serviceForm');
+const thankMsg = document.getElementById('thankYouMsg');
+
+function openOverlay(img,title,desc){
+  overlay.style.backgroundImage=`url(${img})`;
+  overlayTitle.innerText = title;
+  overlayDesc.innerText = desc;
+  overlayForm.style.display='none';
+  thankMsg.style.display='none';
+  overlay.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function closeOverlay(){
+  overlay.classList.remove('active');
+}
+
+// Show form
+function showForm(){
+  overlayForm.style.display='block';
+  document.getElementById('formDescription').value=`Requesting: ${overlayTitle.innerText}`;
+  thankMsg.style.display='none';
+}
+
+// Send WhatsApp
+function sendWhatsApp(){
+  const name=document.getElementById('formName').value.trim();
+  const company=document.getElementById('formCompany').value.trim();
+  const mobile=document.getElementById('formMobile').value.trim();
+  const email=document.getElementById('formEmail').value.trim();
+  const desc=document.getElementById('formDescription').value.trim();
+
+  // Simple validation
+  if(!name || !company || !mobile.match(/^\d+$/) || !email.includes('@') || !desc){
+    alert("Please fill all fields correctly. Mobile must be numbers, email must include @");
+    return;
+  }
+
+  const msg = encodeURIComponent(`📩 Service Booking Request
+--------------------------------
+Service: ${overlayTitle.innerText}
+Name: ${name}
+Company: ${company}
+Mobile: ${mobile}
+Email: ${email}
+Description: ${desc}
+--------------------------------
+Thank you for contacting C-Sling Technologies!`);
+
+  window.open(`https://wa.me/256775158942?text=${msg}`,'_blank');
+
+  // Show thank-you, fade, redirect
+  overlayForm.style.display='none';
+  thankMsg.style.display='block';
+  thankMsg.style.opacity='1';
+
+  setTimeout(()=>{
+    thankMsg.style.transition='opacity 1s';
+    thankMsg.style.opacity='0';
+    setTimeout(()=>{window.location.href='index.html';},1000);
+  },5000);
+}
+</script>
+
+</body>
+</html>
