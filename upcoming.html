@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Upcoming | C-SLING TECHNOLOGIES</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body{
+  color:white;
+  overflow-x:hidden;
+}
+
+/* 🔥 Animated background */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:linear-gradient(120deg,#0f2027,#203a43,#2c5364);
+  background-size:300% 300%;
+  animation:bgMove 12s infinite alternate;
+  z-index:-2;
+}
+
+@keyframes bgMove{
+  from{background-position:0% 50%}
+  to{background-position:100% 50%}
+}
+
+/* HEADER */
+header{
+  position:fixed;
+  top:0;
+  width:100%;
+  padding:15px 40px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:rgba(0,0,0,.45);
+  backdrop-filter:blur(10px);
+  z-index:1000;
+}
+
+header h1{
+  font-size:22px;
+  letter-spacing:2px;
+}
+
+nav a{
+  color:white;
+  margin-left:20px;
+  text-decoration:none;
+  font-weight:500;
+}
+
+nav a:hover{
+  text-decoration:underline;
+}
+
+/* PAGE CONTENT */
+.container{
+  padding-top:120px;
+  padding-bottom:80px;
+  max-width:1200px;
+  margin:auto;
+}
+
+/* CATEGORY TITLE */
+.category{
+  margin-bottom:60px;
+}
+
+.category h2{
+  font-size:26px;
+  margin-bottom:20px;
+  text-align:center;
+}
+
+/* CARD GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:25px;
+}
+
+/* CARD */
+.card{
+  perspective:1200px;
+}
+
+.card-inner{
+  position:relative;
+  width:100%;
+  height:260px;
+  transform-style:preserve-3d;
+  transition:transform .9s ease;
+  cursor:pointer;
+}
+
+.card.active .card-inner{
+  transform:rotateY(180deg);
+}
+
+.card-face{
+  position:absolute;
+  inset:0;
+  padding:25px;
+  border-radius:18px;
+  backface-visibility:hidden;
+  background:rgba(255,255,255,.12);
+  backdrop-filter:blur(12px);
+  box-shadow:0 20px 40px rgba(0,0,0,.35);
+}
+
+.card-face h3{
+  margin-bottom:10px;
+}
+
+.card-face p{
+  font-size:14px;
+  line-height:1.6;
+}
+
+/* BACK */
+.card-back{
+  transform:rotateY(180deg);
+}
+
+/* FOOTER */
+footer{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  text-align:center;
+  padding:10px;
+  background:rgba(0,0,0,.45);
+  backdrop-filter:blur(10px);
+  font-size:13px;
+}
+
+/* MOBILE */
+@media(max-width:600px){
+  header h1{font-size:18px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>C-SLING TECHNOLOGIES</h1>
+ <nav class="main-nav">
+    <a href="index.html">Home</a>
+    <a href="services.html">Services</a>
+    <a href="shop.html">Shop</a>
+    <a href="upcoming.html">Upcoming</a>
+    <a href="careers.html">Careers</a>
+    <a href="aboutus.html">About Us</a>
+</nav>
+
+</header>
+
+<div class="container">
+
+<!-- PRODUCTS -->
+<section class="category">
+<h2>Upcoming Products</h2>
+<div class="grid">
+<div class="card" onclick="toggle(this)">
+  <div class="card-inner">
+    <div class="card-face">
+      <h3>CS-Smart Hub</h3>
+      <p>AI-powered smart home & office control system.</p>
+    </div>
+    <div class="card-face card-back">
+      <p>Centralized automation hub integrating IoT, security, energy management and AI decision systems.</p>
+    </div>
+  </div>
+</div>
+
+<div class="card" onclick="toggle(this)">
+  <div class="card-inner">
+    <div class="card-face">
+      <h3>CS-NextGen Router</h3>
+      <p>AI-optimized high-speed network router.</p>
+    </div>
+    <div class="card-face card-back">
+      <p>Adaptive traffic routing, cybersecurity intelligence and enterprise-grade performance.</p>
+    </div>
+  </div>
+</div>
+
+<div class="card" onclick="toggle(this)">
+  <div class="card-inner">
+    <div class="card-face">
+      <h3>CS-Cloud Node</h3>
+      <p>Private personal cloud device.</p>
+    </div>
+    <div class="card-face card-back">
+      <p>Secure on-premise data storage with remote access and AI backup monitoring.</p>
+    </div>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- SERVICES -->
+<section class="category">
+<h2>Upcoming Services</h2>
+<div class="grid">
+<div class="card" onclick="toggle(this)">
+  <div class="card-inner">
+    <div class="card-face">
+      <h3>AI IT Consultancy</h3>
+      <p>Automated insights & planning.</p>
+    </div>
+    <div class="card-face card-back">
+      <p>AI-driven business IT optimization, forecasting and infrastructure planning.</p>
+    </div>
+  </div>
+</div>
+
+<div class="card" onclick="toggle(this)">
+  <div class="card-inner">
+    <div class="card-face">
+      <h3>Cybersecurity Audits</h3>
+      <p>Proactive threat detection.</p>
+    </div>
+    <div class="card-face card-back">
+      <p>Advanced vulnerability assessments and continuous security monitoring.</p>
+    </div>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- OEM -->
+<section class="category">
+<h2>OEM Concepts</h2>
+<div class="grid">
+<div class="card" onclick="toggle(this)">
+  <div class="card-inner">
+    <div class="card-face">
+      <h3>Network Hardware OEM</h3>
+      <p>Enterprise networking equipment.</p>
+    </div>
+    <div class="card-face card-back">
+      <p>Design & manufacturing of routers, switches and smart gateways.</p>
+    </div>
+  </div>
+</div>
+
+<div class="card" onclick="toggle(this)">
+  <div class="card-inner">
+    <div class="card-face">
+      <h3>Surveillance OEM</h3>
+      <p>Security systems manufacturing.</p>
+    </div>
+    <div class="card-face card-back">
+      <p>AI-powered CCTV, drones and access-control hardware.</p>
+    </div>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- EVENTS -->
+<section class="category">
+<h2>Events</h2>
+<div class="grid">
+<div class="card" onclick="toggle(this)">
+  <div class="card-inner">
+    <div class="card-face">
+      <h3>Coming Soon</h3>
+      <p>Technology events & launches.</p>
+    </div>
+    <div class="card-face card-back">
+      <p>Product launches, workshops, expos and innovation showcases.</p>
+    </div>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- PROMOTIONS -->
+<section class="category">
+<h2>Promotions</h2>
+<div class="grid">
+<div class="card" onclick="toggle(this)">
+  <div class="card-inner">
+    <div class="card-face">
+      <h3>Coming Soon</h3>
+      <p>Special offers & discounts.</p>
+    </div>
+    <div class="card-face card-back">
+      <p>Early-access programs, beta testing and exclusive promotions.</p>
+    </div>
+  </div>
+</div>
+</div>
+</section>
+
+</div>
+
+<footer>
+© 2026 C-SLING TECHNOLOGIES — Innovation in Motion
+</footer>
+
+<script>
+function toggle(card){
+  card.classList.toggle("active");
+}
+</script>
+
+</body>
+</html>
